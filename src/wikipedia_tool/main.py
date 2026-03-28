@@ -56,9 +56,7 @@ class WikipediaToolKit:
         return llm_friendly
 
     # unstructured markdown extraction for articles
-    async def parse_wikipedia_html(self, html_content: str) -> str:
-        print("Parsing HTML with unstructured...")
-        
+    async def parse_wikipedia_html(self, html_content: str) -> str:        
         # We pass the raw string directly to the 'text' parameter
         elements = partition_html(text=html_content)
             
@@ -100,9 +98,7 @@ class WikipediaToolKit:
         if response.status_code == 200:
             # Because the response is raw HTML, we use .text instead of .json()
             html_content = response.text
-            
-            print(f"--- Raw HTML for '{title}' ---")
-            
+                        
             markdown_content = await self.parse_wikipedia_html(html_content)
 
             # only return first 8k characters to not blow up context window
@@ -111,6 +107,7 @@ class WikipediaToolKit:
         else:
             print(f"Error: {response.status_code}")
             print(response.text)
+            return response.text
 
 async def main():
     # replace user agent for testing
