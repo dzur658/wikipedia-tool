@@ -12,28 +12,41 @@ pip install https://github.com/dzur658/wikipedia-tool.git
 
 *(If you are using `uv`, you can also use `uv pip install https://github.com/dzur658/wikipedia-tool.git`)*
 
-## Usage
+## Usage as a Package
 
-The tool provides asynchronous functions to search and inspect Wikipedia pages.
-It is primarily meant to be used within the context of a ReAct agent for grounding purposes.
+Once installed in your project, you can import the search and inspect functions to use as tools for your LLM. They are primarily meant to be used within the context of a ReAct agent for grounding purposes.
+
+### Available Tools
+
+1. **Search Tool (`wikipedia_search`)**: Searches Wikipedia for a query and returns an LLM-friendly formatted string containing page titles and short descriptions. This helps the agent discover relevant pages without loading massive amounts of text.
+2. **Inspect Tool (`test_wikipedia_inspect`)**: Fetches a specific Wikipedia page by title, parsing the raw HTML to extract only relevant narrative text and lists. It returns a clean, chunked string optimized for LLM context windows.
+
+### Example Integration
 
 ```python
 import asyncio
+# Import the tools into your project
 from wikipedia_tool.main import wikipedia_search, test_wikipedia_inspect
+import wikipedia_tool.main as wiki_main
 
-async def main():
+# IMPORTANT: Override the default user agent for your specific project/contact info
+wiki_main.USER_AGENT = "MyCoolAgentBot (myemail@example.com)"
+
+async def agent_workflow():
+    # 1. The agent uses the Search Tool to find relevant information
     query = "Quantum computing"
-    
-    # 1. Search Wikipedia (returns LLM-friendly string)
+    print(f"--- Searching Wikipedia for: {query} ---")
     search_results = await wikipedia_search(query, limit=3)
     print(search_results)
 
-    # 2. Extract clean page content (parsed and chunked for LLMs)
-    page_content = await test_wikipedia_inspect(query)
-    print(page_content)
+    # 2. The agent decides to inspect a specific page title from the search results
+    target_page = "Quantum computing"
+    print(f"\n--- Extracting content for: {target_page} ---")
+    page_content = await test_wikipedia_inspect(target_page)
+    
+    # Render the extracted content (truncated to fit context)
+    print(page_content[:500] + "...\n[Content truncated]")
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(agent_workflow())
 ```
-
-> **Note:** Remember to update the `USER_AGENT` variable in `main.py` with your contact information (e.g., email), as Wikimedia requires a descriptive user-agent for API requests.
