@@ -62,7 +62,7 @@ async def parse_wikipedia_html(html_content: str):
     
     return final_markdown_ish_text
 
-async def test_wikipedia_inspect(USER_AGENT, title: str):
+async def wikipedia_inspect(USER_AGENT, title: str):
     # sanitize spaces to underscores for the URL
     formatted_title = title.replace(" ", "_")
     
