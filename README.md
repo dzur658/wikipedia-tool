@@ -26,7 +26,7 @@ Once installed in your project, you can import the search and inspect functions 
 ```python
 import asyncio
 # Import the tools into your project
-from wikipedia_tool.main import wikipedia_search, test_wikipedia_inspect
+from wikipedia_tool.main import wikipedia_search, wikipedia_inspect
 import wikipedia_tool.main as wiki_main
 
 # IMPORTANT: Override the default user agent for your specific project/contact info
