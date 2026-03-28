@@ -4,10 +4,10 @@ from unstructured.partition.html import partition_html
 
 # REPLACE YOUR USERAGGENT
 # Wikimedia likes a descriptive User-Agent to keep track of who's using the service
-USER_AGENT = "TriviaQA (dzureca7@gmail.com)"
+
 
 # wikipedia search
-async def wikipedia_search(query: str, limit: int = 5):
+async def wikipedia_search(USER_AGENT, query: str, limit: int = 5):
     url = "https://en.wikipedia.org/w/rest.php/v1/search/page"
     
     # Wikimedia requires a descriptive User-Agent
@@ -62,7 +62,7 @@ async def parse_wikipedia_html(html_content: str):
     
     return final_markdown_ish_text
 
-async def test_wikipedia_inspect(title: str):
+async def test_wikipedia_inspect(USER_AGENT, title: str):
     # sanitize spaces to underscores for the URL
     formatted_title = title.replace(" ", "_")
     
@@ -93,12 +93,15 @@ async def test_wikipedia_inspect(title: str):
 async def main():
     # for testing purposes
     test_str = "Quantum computing"
+
+    # replace user agent for testing
+    USER_AGENT = "[REPLACE ME]"
     print(f"Searching Wikipedia for: {test_str}\n")
-    search_results = await wikipedia_search(test_str)
+    search_results = await wikipedia_search(USER_AGENT, test_str)
     print(search_results)
     # get first page
     print(f"\nInspecting Wikipedia page for: {test_str}\n")
-    page_content = await test_wikipedia_inspect(test_str)
+    page_content = await test_wikipedia_inspect(USER_AGENT, test_str)
     print(page_content)
 
 
